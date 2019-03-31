@@ -137,6 +137,35 @@ app.delete('/task/delete/:id', (req, res) => {
     }
 });
 
+/**
+ * PUT /task/update/:id
+ *
+ * id: Number
+ *
+ * Update the task with the given id.
+ * If the task is found and update as well, return a status code 204.
+ * If the task is not found, return a status code 404.
+ * If the provided id is not a valid number return a status code 400.
+ */
+app.put('/task/toggle/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    if (!Number.isNaN(id)) {
+        const task = tasksContainer.tasks.find(item => item.id === id);
+        if (task) {
+            task.completed = !task.completed;
+            res.status(204).send();
+        } else {
+            res.status(404).json({
+                message: 'Not found',
+            });
+        }
+    } else {
+        return res.status(400).json({
+            message: 'Bad request',
+        });
+    }
+});
+
 app.listen(9001, () => {
     process.stdout.write('the server is available on http://localhost:9001/\n');
 });
